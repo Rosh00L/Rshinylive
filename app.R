@@ -82,7 +82,7 @@ mtcars <- vs2 %>%
   filter(SUBJID %in% SUBJID_f) %>%
   filter(SAFFL=="Y")
 
-write_xlsx(mtcars, "C:\\Github_proj\\Vital_Data_v2\\Data\\mtcars.xlsx")
+write_xlsx(mtcars, "https:\\github.com\\Rosh00L\\Rshinylive\\blob\\main\\Data\\mtcars.xlsx")
 
 addmds<- mtcars %>%
   distinct(SUBJID, .keep_all= TRUE)
