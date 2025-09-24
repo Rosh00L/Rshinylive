@@ -29,7 +29,8 @@ library(shinylive)
 library(httpuv)
 
 
-vsdata <- read.csv("https:\\github.com\\Rosh00L\\Rshinylive\\tree\\main\\Data\\advs.csv")
+vsdata <- read.csv("https:\\github.com\\Rosh00L\\Rshinylive\\blob\\main\\Data\\advs.csv")
+                    
 
 vssub_=subset(vsdata, select=c(SUBJID,SEX,AGE,RACE,PARAM,PARAMCD,AVISIT,VISITNUM,ADY,ATPT,ATPTN,VSDTC,AVAL,TRT01A,RANDFL,SAFFL))
 
