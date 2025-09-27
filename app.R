@@ -270,7 +270,7 @@ server <- function(input, output, session) {
       geom_line(aes(colour = filterDay()$TRT01A),size = 1.5) +
       scale_x_continuous(labels=as.character(filterDay()$DayN),breaks=filterDay()$DayN) +
       theme(axis.text.x = element_text(size = 10,angle = 45), axis.text.y = element_text(size = 15)) +
-      labs(title =  paste("Figure 10.0.0.0.1 Overall Mean value in", sub(" *\\(.*", "",input$y_axis), "versus Nominal Time - Linear Scale - (Safety Set)"), x = "Visit Day" , y = input$y_axis) +
+      labs(title =  paste("Figure 1.0.0.0.1 Mean Overall value in", sub(" *\\(.*", "",input$y_axis), "versus Nominal Time - Linear Scale - (Safety Set)"), x = "Visit Day" , y = input$y_axis) +
       geom_vline(xintercept = 0, linewidth = 0.5, linetype='dashed', color = 'navyblue')+
       annotate("text", x=1, y=89, label="Pre-dose", size=4, color="blue") +
       geom_hline(yintercept = mean_val1(), color = "red", linetype = "dashed", size = 0.5)+
@@ -305,7 +305,7 @@ server <- function(input, output, session) {
         geom_line(aes(colour = filteredData()$Gx),size = 1.5) +
         scale_x_continuous(labels=as.character(filteredData()$DayN),breaks=filteredData()$DayN) +
         theme(axis.text.x = element_text(size = 10,angle = 45), axis.text.y = element_text(size = 15)) +
-        labs(title = paste("Figure 10.0.0.0.2 Mean", sub(" *\\(.*", "",input$y_axis),"value versus Nominal Time - By Treatment Group - Linear Scale - (Safety Set)"), x = "Visit Day", y = input$y_axis) +
+        labs(title = paste("Figure 1.0.0.0.2 Mean", sub(" *\\(.*", "",input$y_axis),"value versus Nominal Time - By Treatment Group - Linear Scale - (Safety Set)"), x = "Visit Day", y = input$y_axis) +
         geom_vline(xintercept = 0, linewidth = 0.5, linetype='dashed', color = 'navyblue')+
         annotate("text", x=1.5, y=89, label="Pre-dose", size=4, color="blue") +
         geom_hline(yintercept = mean_val2(), color = "red", linetype = "dashed", size = 0.5)+
@@ -320,7 +320,7 @@ server <- function(input, output, session) {
         geom_line(aes(colour = filteredData()$Gx),size = 1.5) +
         scale_x_continuous(labels=as.character(filteredData()$DayN),breaks=filteredData()$DayN) +
         theme(axis.text.x = element_text(size = 10,angle = 45), axis.text.y = element_text(size = 15)) +
-        labs(title = paste("Figure 10.0.0.0.2 Mean", sub(" *\\(.*", "",input$y_axis),"value versus Nominal Time - By Gender Group - Linear Scale - (Safety Set)"), x = "Visit Day", y = input$y_axis) +
+        labs(title = paste("Figure 1.0.0.0.2 Mean", sub(" *\\(.*", "",input$y_axis),"value versus Nominal Time - By Gender Group - Linear Scale - (Safety Set)"), x = "Visit Day", y = input$y_axis) +
         geom_vline(xintercept = 0, linewidth = 0.5, linetype='dashed', color = 'navyblue')+
         annotate("text", x=1.5, y=89, label="Pre-dose", size=4, color="blue") +
         geom_hline(yintercept = mean_val2(), color = "red", linetype = "dashed", size = 0.5)+
@@ -337,7 +337,7 @@ server <- function(input, output, session) {
         scale_x_continuous(labels=as.character(filteredData()$DayN),breaks=filteredData()$DayN) +
         theme(axis.text.x = element_text(size = 10,angle = 45), axis.text.y = element_text(size = 15)) +
         guides(color = guide_legend(title = " Subject"))+
-        labs(title = paste("Figure 10.0.0.0.2", sub(" *\\(.*", "",input$y_axis),"value versus Nominal Time - By Subjct - Linear Scale - (Safety Set)"), x = "Visit Day", y = input$y_axis)
+        labs(title = paste("Figure 1.0.0.0.2", sub(" *\\(.*", "",input$y_axis),"value versus Nominal Time - By Subjct - Linear Scale - (Safety Set)"), x = "Visit Day", y = input$y_axis)
       
     }
     
@@ -370,7 +370,7 @@ server <- function(input, output, session) {
       ggplot(filteredsc(), aes(x= filteredsc()$DayN, y = filteredsc()$AVAL, colour = as.factor(filteredsc()$SEX))) +
         geom_point()  +
         scale_x_continuous(labels=as.character(filteredData()$DayN),breaks=filteredData()$DayN) +
-        labs(title = paste("Figure 10.0.0.0.4", sub(" *\\(.*", "",input$y_axis), "Value Versus Nominal Time - By Gender- (Safety Set)"), x = "Visit Day", y =  input$y_axis, colour="Gender") +
+        labs(title = paste("Figure 1.0.0.0.4", sub(" *\\(.*", "",input$y_axis), "Value Versus Nominal Time - By Gender- (Safety Set)"), x = "Visit Day", y =  input$y_axis, colour="Gender") +
         scale_y_continuous(expand = c(0, 0), limits = c(0, max_valsc()+10))
       
       
@@ -382,7 +382,7 @@ server <- function(input, output, session) {
       ggplot(filteredsc(), aes(x= filteredsc()$DayN, y = filteredsc()$AVAL, colour = as.factor(filteredsc()$TRT01A))) +
         geom_point()  +
         scale_x_continuous(labels=as.character(filteredData()$DayN),breaks=filteredData()$DayN) +
-        labs(title = paste("Figure 10.0.0.0.4", sub(" *\\(.*", "",input$y_axis), "Value Versus Nominal Time - By Treatment Group - (Safety Set)"), x = "Visit Day", y =  input$y_axis , colour="Treatment" ) +
+        labs(title = paste("Figure 1.0.0.0.4", sub(" *\\(.*", "",input$y_axis), "Value Versus Nominal Time - By Treatment Group - (Safety Set)"), x = "Visit Day", y =  input$y_axis , colour="Treatment" ) +
         scale_y_continuous(expand = c(0, 0), limits = c(0, max_valsc()+10))
       #geom_point(stat="identity", position = "dodge")  +
       #labs(title = "What is your favourite animal?", subtitle = "Percent of respondents")
@@ -394,7 +394,7 @@ server <- function(input, output, session) {
       ggplot(filteredsc(), aes(x= filteredsc()$DayN, y = filteredsc()$AVAL, colour = as.factor(filteredsc()$SUBJID))) +
         geom_point()  +
         scale_x_continuous(labels=as.character(filteredData()$DayN),breaks=filteredData()$DayN) +
-        labs(title = paste("Figure 10.0.0.0.4", sub(" *\\(.*", "",input$y_axis), "Value Versus Nominal Time - By Subject- (Safety Set)"), x = "Visit Day", y =  input$y_axis , colour="Subject" ) +
+        labs(title = paste("Figure 1.0.0.0.4", sub(" *\\(.*", "",input$y_axis), "Value Versus Nominal Time - By Subject- (Safety Set)"), x = "Visit Day", y =  input$y_axis , colour="Subject" ) +
         scale_y_continuous(expand = c(0, 0), limits = c(0, max_valsc()+10))
       #geom_point(stat="identity", position = "dodge")  +
       #labs(title = "What is your favourite animal?", subtitle = "Percent of respondents")
@@ -427,7 +427,7 @@ server <- function(input, output, session) {
       ggplot(filterGenb1(), aes(x=filterGenb1()$AGEGR1, y = filterGenb1()$meanbVal, fill = factor(filterGenb1()$TRT01A))) +
         geom_bar(stat="identity", position = "dodge")+
         scale_y_continuous(expand = c(0, 0))+
-        labs(title =  paste("Figure 10.0.0.0.3 Age Group in", sub(" *\\(.*", "",input$y_axis), "versus Age Group  - By Treatment"), x = "Age Group", y =  input$y_axis )+
+        labs(title =  paste("Figure 1.0.0.0.3 Age Group in", sub(" *\\(.*", "",input$y_axis), "versus Age Group  - By Treatment"), x = "Age Group", y =  input$y_axis )+
         labs(fill= "Treatment")
     }
     
@@ -448,7 +448,7 @@ server <- function(input, output, session) {
       ggplot(filterGen(), aes(x= filterGen()$TRT01A, y = filterGen()$meanbVal, fill =  factor(filterGen()$SEX))) +
         geom_bar(stat="identity", position = "dodge")  +
         scale_y_continuous(expand = c(0, 0)) +
-        labs(title = paste("Figure 10.0.0.0.3 Age Group in", sub(" *\\(.*", "",input$y_axis), "versus Treatment - By Gender "), x = "Treatment", y = input$y_axis, fill= "Gender" )
+        labs(title = paste("Figure 1.0.0.0.3 Age Group in", sub(" *\\(.*", "",input$y_axis), "versus Treatment - By Gender "), x = "Treatment", y = input$y_axis, fill= "Gender" )
       
     }
     else if ( input$plot_type1 == "SUBJID") {
@@ -468,7 +468,7 @@ server <- function(input, output, session) {
       ggplot(filterGen(), aes(x=filterGen()$TRT01A, y = filterGen()$meanbVal,group=filterGen()$SUBJID, fill = factor(filterGen()$SUBJID))) +
         geom_bar(stat="identity", position = position_dodge(),width=0.75)  +
         #scale_y_continuous(expand = c(0, 0)) +
-        labs(title = paste("Figure 10.0.0.0.3 Age Group in", sub(" *\\(.*", "",input$y_axis), "versus Treatment - By Suject"), x = "Treatment", y = input$y_axis, fill= "Subject"  )
+        labs(title = paste("Figure 1.0.0.0.3 Age Group in", sub(" *\\(.*", "",input$y_axis), "versus Treatment - By Suject"), x = "Treatment", y = input$y_axis, fill= "Subject"  )
       
     }
   })
