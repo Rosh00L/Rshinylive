@@ -29,10 +29,9 @@ library(shinylive)
 library(httpuv)
 
 
-#vsdata <- read.csv("https:\\github.com\\Rosh00L\\Rshinylive\\blob\\main\\Data\\advs.csv")
-
 vsdata <- read.csv("https://raw.githubusercontent.com/Rosh00L/Rshinylive/main/Data/advs.csv")
-                    
+
+#vsdata <- read.csv("G://Github_proj//Rshinylive//Data//advs.csv")                    
 
 vssub_=subset(vsdata, select=c(SUBJID,SEX,AGE,RACE,PARAM,PARAMCD,AVISIT,VISITNUM,ADY,ATPT,ATPTN,VSDTC,AVAL,TRT01A,RANDFL,SAFFL))
 
@@ -78,37 +77,48 @@ vs2  <- data |>
                                 RACE = "Race")
 
 SUBJID_f <- c(11001,11002,11005,12001,12002,12003,13003,13004,13005,14001,14003,14005,15001,15002,15004)
+PARAMCD_f <- c("DIABP","HR","RESP","SYSBP","TEMP")
 
-mtcars <- vs2 %>%
+
+ADVS_Ds <- vs2 %>%
   arrange(VISITNUM,DayN) %>%
   filter(SUBJID %in% SUBJID_f) %>%
+  filter(PARAMCD %in% PARAMCD_f) %>%
   filter(SAFFL=="Y")
 
-write_xlsx(mtcars, "https:\\github.com\\Rosh00L\\Rshinylive\\blob\\main\\Data\\mtcars.xlsx")
+#write_xlsx(ADVS_Ds, ("G://Github_proj//Rshinylive//Data//advs.xlsx"))
 
-addmds<- mtcars %>%
+addmds<- ADVS_Ds %>%
+  mutate(TRT01N= ifelse( TRT01A=='Placebo',1,
+                         ifelse( TRT01A=='0.3 ug',2,
+                                 ifelse( TRT01A=='1.0 ug',3,
+                                         ifelse( TRT01A=='3.0 ug',4,
+                                                 ifelse( TRT01A=='6.0 ug',5,
+                                                         ifelse( TRT01A=='12.0 ug',6,""))))))) %>%
   distinct(SUBJID, .keep_all= TRUE)
+
+#write_xlsx(addmds, ("G://Github_proj//Rshinylive//Data//DEMO.xlsx"))
 
 ##################################################################################################
 #~~~~~~~~~~~~~~~~~~~Dataset for VS summery table ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-dayliast <- factor(unique(mtcars$DayN))
+dayliast <- factor(unique(ADVS_Ds$DayN))
 
 
 # Define UI
 ui <- fluidPage(
-  titlePanel ("Vital Sings Data Dashboard"),
+  titlePanel ("Interactive Tables and Figures Demo Using Vital Sings"),
   br(),
   sidebarLayout(
     sidebarPanel(width = 2, style = "border-style: solid; border-color: black",
                  checkboxGroupInput("TRT","Treatment group:",
-                                    choices = unique(mtcars$TRT01A),selected =unique(mtcars$TRT01A)),
+                                    choices = unique(ADVS_Ds$TRT01A),selected =unique(ADVS_Ds$TRT01A)),
                  
                  selectInput("y_axis", "Select Y Axis:",
-                             choices = unique(mtcars$PARAM), selected = unique(mtcars$PARAM[2])),
+                             choices = unique(ADVS_Ds$PARAM), selected = unique(ADVS_Ds$PARAM[1])),
                  
                  checkboxGroupInput("bySUBJID","Select Subject:",
-                                    choices = unique(mtcars$SUBJID),selected =unique(mtcars$SUBJID)),
+                                    choices = unique(ADVS_Ds$SUBJID),selected =unique(ADVS_Ds$SUBJID)),
                  
                  radioButtons("plot_type1", "Variables to show:",
                               c("Vital sings Paramers by Treatmets" = "TRT01A",
@@ -117,24 +127,41 @@ ui <- fluidPage(
                  ),
                  
                  checkboxGroupInput("Visits", "Treal Visits:",
-                                    choices = unique(mtcars$VisDay),selected =unique(mtcars$VisDay)),
+                                    choices = unique(ADVS_Ds$VisDay),selected =unique(ADVS_Ds$VisDay)),
                  
-                 checkboxInput("showTable", "Show Data Table", value = FALSE),
-                 hr(),
+                 #checkboxInput("showTable", "Show Data Table", value = FALSE),
+                 #hr(),
                  
-                 sliderInput(
-                   inputId = "age_range",
-                   label = "Age Range",
-                   min = 5, max = 85,
-                   value = c(5, 85), step = 5
-                 )
+                 #sliderInput(
+                   #inputId = "age_range",
+                   #label = "Age Range",
+                   #min = 5, max = 85,
+                   #value = c(5, 85), step = 5
+                 #)
     ),
     
     
     mainPanel(width = 10, #h1("Main Panel Header"),
               tabsetPanel(
                 
-                tabPanel("VS",
+                tabPanel("Table 1. Summary of Demographics",
+                         br(),
+                         fluidRow(
+                           # 1st column for map
+                           column(6,  style = 'border: 1px solid lightgrey; border-radius: 25px',
+                                  br(),
+                                  # ntitle and info button
+                                  div(HTML('<b>  </b> '), style = 'display: inline-block;'),
+                                  uiOutput('vs map_button', style = 'display: inline-block;'),
+                                  br(), br(),
+                                  # map plot
+                                  gt_output(outputId = "my_gt_table"),
+                                  br()
+                           ),
+                         ),
+                ),  
+                
+                tabPanel("Table 2.0.0.1 Vital Signs – Descriptive Statistics",
                          br(),
                          fluidRow(
                            # 1st column for map
@@ -142,7 +169,7 @@ ui <- fluidPage(
                                   br(),
                                   # ntitle and info button
                                   div(HTML('<b> </b> '), style = 'display: inline-block;'),
-                                  uiOutput('sales_map_button', style = 'display: inline-block;'),
+                                  uiOutput('vs map_button', style = 'display: inline-block;'),
                                   br(), br(),
                                   # map plot
                                   gt_output(outputId = "ADVS_table"),
@@ -153,7 +180,7 @@ ui <- fluidPage(
                                   br(),
                                   # ntitle and info button
                                   div(HTML('<b>  </b> '), style = 'display: inline-block;'),
-                                  uiOutput('sales_map_button', style = 'display: inline-block;'),
+                                  uiOutput('vs map_button', style = 'display: inline-block;'),
                                   br(), br(),
                                   # map plot
                                   plotOutput('line1', height = '350px'),
@@ -163,7 +190,7 @@ ui <- fluidPage(
                                   br(),
                                   # ntitle and info button
                                   div(HTML('<b>  </b> '), style = 'display: inline-block;'),
-                                  uiOutput('sales_map_button', style = 'display: inline-block;'),
+                                  uiOutput('vs map_button', style = 'display: inline-block;'),
                                   br(), br(),
                                   # map plot
                                   plotOutput('line2', height = '350px'),
@@ -172,19 +199,19 @@ ui <- fluidPage(
                            
                            column(6, style = 'border: 1px solid lightgrey; border-radius: 25px',
                                   br(),
-                                  # sales trend title and info button
+                                  # VS trend title and info button
                                   div(HTML('<b>   </b> '), style = 'display: inline-block;'),
-                                  uiOutput('sales_trend_button', style = 'display: inline-block;'),
+                                  uiOutput('vs_trend_button', style = 'display: inline-block;'),
                                   br(), br(),
                                   # trend plot
                                   plotOutput('plot1', height = '350px')
                            ),
                            column(6, style = 'border: 1px solid lightgrey; border-radius: 25px',
-                                  # fluidRow for sales trend
+                                  # fluidRow for VS trend
                                   br(),
-                                  # sales trend title and info button
+                                  # VS trend title and info button
                                   div(HTML('<b>   </b> '), style = 'display: inline-block;'),
-                                  uiOutput('sales_trend_button', style = 'display: inline-block;'),
+                                  uiOutput('vs_trend_button', style = 'display: inline-block;'),
                                   br(), br(),
                                   # trend plot
                                   plotOutput('scatter', height = '350px')
@@ -193,38 +220,23 @@ ui <- fluidPage(
                          ),
                 ),
                 
-                tabPanel("DEMO",
-                         br(),
-                         fluidRow(
-                           # 1st column for map
-                           column(6,  style = 'border: 1px solid lightgrey; border-radius: 25px',
-                                  br(),
-                                  # ntitle and info button
-                                  div(HTML('<b>  </b> '), style = 'display: inline-block;'),
-                                  uiOutput('sales_map_button', style = 'display: inline-block;'),
-                                  br(), br(),
-                                  # map plot
-                                  gt_output(outputId = "my_gt_table"),
-                                  br()
-                           ),
-                         ),
-                ),
+
                 
                 
-                tabPanel("Plot",
-                         br(),
-                         fluidRow(
+               # tabPanel("Plot",
+              #           br(),
+              #           fluidRow(
+                          # 1st column for map
+                           # 2nd column for plots
+              #           ),
+                         
+               #          br(),
+                         
+                #         fluidRow(
                            # 1st column for map
                            # 2nd column for plots
-                         ),
-                         
-                         br(),
-                         
-                         fluidRow(
-                           # 1st column for map
-                           # 2nd column for plots
-                         ),
-                ),
+                #         ),
+                #),
               ),
     )
   ))
@@ -235,7 +247,7 @@ server <- function(input, output, session) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ line 1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
   
   filterDay <- reactive({
-    Pdata1 <- mtcars%>%
+    Pdata1 <- ADVS_Ds%>%
       filter (VISITNUM != 10000) %>%
       filter (PARAM %in% c(input$y_axis))%>%
       filter (TRT01A %in% (input$TRT)) %>%
@@ -269,7 +281,7 @@ server <- function(input, output, session) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ line 2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
   
   filteredData <- reactive({
-    Pdata2 <- mtcars%>%
+    Pdata2 <- ADVS_Ds%>%
       filter (VISITNUM != 10000) %>%
       filter (SUBJID %in% (input$bySUBJID)) %>%
       filter (PARAM == input$y_axis) %>%
@@ -334,7 +346,7 @@ server <- function(input, output, session) {
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Scatter ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
   
   filteredsc <- reactive({
-    Psc <- mtcars %>%
+    Psc <- ADVS_Ds %>%
       filter (VISITNUM != 10000) %>%
       filter (SUBJID %in% (input$bySUBJID)) %>%
       filter (PARAM %in% c(input$y_axis))%>%
@@ -401,7 +413,7 @@ server <- function(input, output, session) {
     if ( input$plot_type1 == "TRT01A") {
       
       filterGenb1 <- reactive({
-        Bardata <- mtcars%>%
+        Bardata <- ADVS_Ds%>%
           filter (VISITNUM != 10000) %>%
           filter (SUBJID %in% (input$bySUBJID)) %>%
           filter (PARAM == input$y_axis)%>%
@@ -422,7 +434,7 @@ server <- function(input, output, session) {
     else  if ( input$plot_type1 == "SEX") {
       
       filterGen <- reactive({
-        Bardata <- mtcars%>%
+        Bardata <- ADVS_Ds%>%
           filter (VISITNUM != 10000) %>%
           filter (SUBJID %in% (input$bySUBJID)) %>%
           filter (PARAM == input$y_axis)%>%
@@ -442,7 +454,7 @@ server <- function(input, output, session) {
     else if ( input$plot_type1 == "SUBJID") {
       
       filterGen <- reactive({
-        Bardata <- mtcars%>%
+        Bardata <- ADVS_Ds%>%
           filter (VISITNUM != 10000) %>%
           filter (SUBJID %in% (input$bySUBJID)) %>%
           filter (PARAM == input$y_axis)%>%
@@ -466,11 +478,14 @@ server <- function(input, output, session) {
   
   addmds2 <- reactive({
     dmdata <- addmds %>%
-      group_by(TRT01A) %>%
-      filter (TRT01A %in% (input$TRT))
+      group_by(TRT01N) %>%
+      filter (TRT01A %in% (input$TRT)) %>%
+      mutate(TRT01A = factor(TRT01A, levels = c("Placebo", "0.3 ug", "1.0 ug", "3.0 ug","6.0 ug","12.0 ug")))
   })
   
   #observe(print(addmds2()))
+  
+  #byv <- c(TRT01N,TRT01A)
   
   output$my_gt_table <-
     render_gt(
@@ -480,26 +495,28 @@ server <- function(input, output, session) {
         # dplyr::between(AGE, input$age_range[1], input$age_range[2])
         #) %>%
         tbl_summary(
-          by = TRT01A,
+          by =  TRT01A,
+         
           type = list(AGE = "continuous2"),
           include = c(AGE,AGEGR1,SEX,RACE),
           statistic = all_continuous() ~ c("{N_nonmiss}","{mean} ({sd})","{median} ({p25}, {p75})", "{min}, {max}"),
-          missing = "no"
+          missing = "no",
+          sort = all_categorical() ~ "frequency"
         ) %>%
-        add_overall()%>%
+        add_overall(last = TRUE)%>%
         italicize_levels() %>%
         add_stat_label() %>%
         # CONVERT TO A {gt} TABLE! VERY IMPORTANT STEP!
         as_gt() %>%
+        
         tab_header(md("**Table 1. Summary of Demographics** - Safety Population"))
     )
-  
   
   
   #################ADVS Summery table#################################################################################
   
   
-  LB4 <- mtcars %>%
+  LB4 <- ADVS_Ds %>%
     select(c("SUBJID", "TRT01A", "VISITNUM", "VisDay","PARAM", "PARAMCD","AVAL")) %>%
     filter (!(VisDay %in% c('Screening','Unscheduled')))
   
@@ -633,7 +650,7 @@ server <- function(input, output, session) {
         ) |>
         
         tab_header(
-          title = md("**Table 10.0.0.1 Vital Signs – Descriptive Statistics (Safety Set)**")
+          title = md("**Table 2.0.0.1 Vital Signs – Descriptive Statistics (Safety Set)**")
           
         ) |>
         
@@ -645,12 +662,12 @@ server <- function(input, output, session) {
         ) |>
         
         cols_move_to_start(
-          columns = c(DayList, Stats,Tr1,Tr3,Tr4,Tr2,Tr5,Tr6) #PARAMList
+          columns = c(DayList, Stats,Tr6,Tr1,Tr2,Tr4,Tr5,Tr3) #PARAMList
         ) |>
         
         tab_spanner(
           label = "Treatment",
-          columns = c(Tr1,Tr3,Tr4,Tr2,Tr5,Tr6)
+          columns = c(Tr6,Tr1,Tr2,Tr4,Tr5,Tr3)
         ) |>
         ####################################################################
       tab_style(
