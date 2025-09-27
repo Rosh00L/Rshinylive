@@ -107,7 +107,7 @@ dayliast <- factor(unique(ADVS_Ds$DayN))
 
 # Define UI
 ui <- fluidPage(
-  titlePanel ("Interactive Tables and Figures Demo Using Vital Sings"),
+  titlePanel ("Interactive Tables and Figures Using Vital Sings"),
   br(),
   sidebarLayout(
     sidebarPanel(width = 2, style = "border-style: solid; border-color: black",
